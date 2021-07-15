@@ -1,0 +1,58 @@
+
+type Query {
+    hellou:String!
+    getUser:UserView
+    
+    #users
+    getFavorites(page:Int):Paginate
+    isFavorite(id:ID!):Boolean!
+    
+    #administrador
+    getUsers(page:Int,name:String,email:String,phone:Int,country:String):PaginateUser!
+    getUserslength:Int!
+    getUsersSubscribeds(value:Boolean!):Int!
+    getCreatorsLength:Int!
+    getUnconfirmedPhoneUsers(value:Boolean!):Int!
+    getUnconfirmedEmailUsers(value:Boolean!):Int!
+
+}
+
+type PaginateUser{
+    users:[User]!,
+    pages:Int!,
+    page:Int!
+}
+
+type Mutation{
+    createUser(name:String!,email:String!,password:String!,phone:Float!,country:String!):String 
+    loginUser(email:String!,password:String!):String
+    toggleFavorite(id:ID!):Boolean!
+    updateUser(id:ID!,name:String,country:String):String
+}
+
+
+
+
+type UserView {
+    name:String
+    email:String
+    role:RoleType
+    phone:Int
+    country:String
+}
+
+type User {
+    name:String!
+    email:String!
+    password:String!
+    role:RoleType!
+    phone:Int!
+    favorites:[Notice]
+    country:String
+}
+
+enum RoleType{
+    user
+    creator
+    moderator
+}

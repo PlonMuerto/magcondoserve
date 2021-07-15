@@ -1,0 +1,16 @@
+type Query {
+    helloc:String!
+}
+
+type Content {
+    type:ContentType
+    content:String
+    creator:User
+    new:Notice
+}
+
+enum ContentType{
+    image
+    video
+    text
+}

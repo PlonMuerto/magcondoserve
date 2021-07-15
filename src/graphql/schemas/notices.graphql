@@ -1,0 +1,28 @@
+type Query {
+    hellon:String!
+    getNotices(section:String,tags:[String],title:String,page:Int,pages:Int):Paginate
+}
+
+
+
+type Paginate{
+    notices:[Notice!]
+    pages:Int!
+    page:Int!
+}
+
+type Notice {
+    title:String!
+    imageheader:String!
+    description:String!
+    contents:[Content]!
+    creator:User!,
+    tags:[String],
+    section:String
+}
+
+type PaginationRes{
+    notices:[Notice]!,
+    pages:Int!,
+    page:Int!
+}
