@@ -8,7 +8,7 @@ type Query {
     isFavorite(id:ID!):Boolean!
     
     #administrador
-    getUsers(page:Int,name:String,email:String,phone:Int,country:String):PaginateUser!
+    getUsers(pages:Int,page:Int,name:String,email:String,phone:Float,country:String):PaginateUser
     getUserslength:Int!
     getUsersSubscribeds(value:Boolean!):Int!
     getCreatorsLength:Int!
@@ -42,17 +42,22 @@ type UserView {
 }
 
 type User {
+    _id:ID
     name:String!
     email:String!
     password:String!
     role:RoleType!
-    phone:Int!
+    phone:Float
     favorites:[Notice]
     country:String
+    subscribed:Boolean
+    phoneConfirm:Boolean
+    emailConfirm:Boolean,
+    locked:Boolean
 }
 
 enum RoleType{
     user
     creator
-    moderator
+    admin
 }

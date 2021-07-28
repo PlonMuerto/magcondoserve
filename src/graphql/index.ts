@@ -6,21 +6,25 @@ import 'graphql-import-node'
 import notices from './schemas/notices.graphql';
 import content from './schemas/content.graphql';
 import users from './schemas/users.graphql';
+import sections from './schemas/section.graphql';
 
 //resolvers imports 
 import {Rusers} from './resolvers/users.resolvers';
 import {Rcontent} from './resolvers/content.resolvers';
 import {Rnotices} from './resolvers/notice.resolvers';
+import { Rsections } from './resolvers/section.resolvers';
 
 export const schema: GraphQLSchema = mergeSchemas({
     schemas:[
         notices,
         content,
-        users
+        users,
+        sections
     ],
     resolvers:[
         Rusers,
         Rcontent,
-        Rnotices
+        Rnotices,
+        Rsections
     ]
 })

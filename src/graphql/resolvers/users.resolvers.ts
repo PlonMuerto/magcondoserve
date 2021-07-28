@@ -135,6 +135,8 @@ export const Rusers:IResolvers = {
         },
         async getUsers(parent,args,context){
             console.log('daniel');
+
+            console.log(args);
             if(!context.authorization){
                 
                 console.log('xd1')
@@ -159,8 +161,8 @@ export const Rusers:IResolvers = {
 
             ///params filters
             let name:paramsFilter = args.name  ? args.name : false;
-            let email:phoneFilter = args.email  ? args.email : false;
-            let phone: paramsFilter = args.phone  ? args.phone : false;
+            let email:paramsFilter = args.email  ? args.email : false;
+            let phone: phoneFilter = args.phone  ? args.phone : false;
             let country:paramsFilter = args.country ? args.country : false;
 
             let page = (args.page  || 1)-1;
@@ -172,28 +174,31 @@ export const Rusers:IResolvers = {
             let Usuarios = Users.find();
             let countUsuarios = Users.countDocuments();
 
+            
+
             //filter created for mongoose
-            if(name){
+            if(name && name!==""){
                 Usuarios.where('name').regex('.*' + name + '.*');
                 countUsuarios.where('name').regex('.*' + name + '.*');
             }
     
-            if(email){
+            if(email && email !== ""){
                 Usuarios.where('email').regex('.*' + email + '.*');
                 countUsuarios.where('email').regex('.*' + email + '.*');
             }
-
-            if(phone){
+            console.log(phone);
+            if(phone && phone > 0){
+                
                 Usuarios.where('phone').regex('.*' + phone + '.*');
                 countUsuarios.where('phone').regex('.*' + phone + '.*');
             }
 
-            if(country){
+            if(country && country !== ""){
                 Usuarios.where('country').regex('.*' + country + '.*');
                 countUsuarios.where('country').regex('.*' + country + '.*');
             }
 
-            let users = await Usuarios.skip(calcPage).limit(perPages);
+            let users = Usuarios.skip(calcPage).limit(perPages);
 
             let length = await countUsuarios;
 
@@ -201,9 +206,9 @@ export const Rusers:IResolvers = {
 
             
 
-            let pages = Math.ceil(length/perPages);
+            let pages = length ? Math.ceil(length/perPages) : 0;
 
-            
+          
 
             return {
                 page,
@@ -212,7 +217,7 @@ export const Rusers:IResolvers = {
             }
         },
         async getUserslength(parent,args,context){
-            
+            console.log('xdaniel');
             if(!context.authorization){
                 console.log('xd1')
                 return  Error('no estas autorizado');

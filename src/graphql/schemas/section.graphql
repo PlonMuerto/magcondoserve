@@ -1,0 +1,16 @@
+type Query{
+    getSections(name:String):[Section]!
+}
+
+type Section{
+    _id:ID!
+    name:String!
+    description:String!
+    color:String!
+    secundary:String!
+    subsection:[Subsection]
+}
+type Subsection{
+    _id:ID!
+    title:String!
+}

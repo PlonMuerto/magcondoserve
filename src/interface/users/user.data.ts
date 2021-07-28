@@ -9,6 +9,9 @@ export interface IUser {
     favorites:Array<ObjectId>;
     country:string;
     subscribed:boolean;
+    locked:boolean;
+    emailConfirm:boolean;
+    phoneConfirm:boolean;
 }
 export interface IUserDocument extends IUser, Document {}
 export interface IUserModel extends Model<IUserDocument> {}

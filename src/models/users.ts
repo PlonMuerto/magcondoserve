@@ -49,6 +49,10 @@ const UserSchema = new Schema({
         type:Boolean,
         default:false
     },
+    locked:{
+        type:Boolean,
+        default:false
+    },
     subscribed:{
         type:Boolean,
         default:false
