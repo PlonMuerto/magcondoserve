@@ -76,12 +76,7 @@ export default {
     deleteSection:async function(req:Request,res:Response){
         try{
             const { id } = req.body;
-            let findSubsections = await  Sections.findById(id);
-            if(findSubsections?.subsections){
-                let deleteSubsections = await Sections.deleteMany({_id:{$in:findSubsections?.subsections}})
-            }
-
-            let deleted = await Sections.findOneAndRemove(id);
+            let deleted = await Sections.findOneAndRemove({_id:id});
             return res.status(200).send(deleted);
         }catch(err){
             console.log(err);

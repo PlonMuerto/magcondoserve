@@ -8,10 +8,8 @@ export default async function auth_user(req:Request,res:Response,next:NextFuncti
 
 
     let token = req.headers.authorization.split(' ')[1];
-
     if(token === null) return res.status(403).send('no estas autorizado');
     try{
-        console.log('ok');
         let valid = await jwt.verify(token,Secret);
         if(!valid){ 
             return res.status(403).send('seccion invalida');

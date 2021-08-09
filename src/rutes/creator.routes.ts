@@ -1,7 +1,5 @@
 import { Router } from "express";
-import Multer from 'multer'
-
-const upload = Multer({dest:'files/'});
+import {upload} from "../helpers/digitaloceanSpaces/configMulter";
 
 const router = Router();
 
@@ -11,9 +9,10 @@ import creatorControl from '../controllers/creator.controllers';
 //middlewares
 
 
+
 router.post('/logincreator',creatorControl.loginCreator);
 
-router.post('/createnotice',creatorControl.createNotice);
+router.post('/createnotice',upload.fields([{name:"head",maxCount:1},{name:"files",maxCount:8}]),creatorControl.createNotice);
 
 router.put('/editnotice',creatorControl.editNotice);
 

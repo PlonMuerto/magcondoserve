@@ -4,6 +4,7 @@ import {UserModel as User} from '../models/users';
 
 export default async function auth_creator(req:Request,res:Response,next:NextFunction){
     if(res.locals.user.role === 'creator' || res.locals.user.role === 'admin'){
+        
         try{
             let user = await User.findById(res.locals.user.id);
              if(user?.role === res.locals.user.role){

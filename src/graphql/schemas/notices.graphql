@@ -1,6 +1,6 @@
 type Query {
     hellon:String!
-    getNotices(section:String,tags:[String],title:String,page:Int,pages:Int):Paginate
+    getNotices(section:String,subsection:String,tags:[String],title:String,page:Int,pages:Int):Paginate
 }
 
 
@@ -13,12 +13,14 @@ type Paginate{
 
 type Notice {
     title:String!
-    imageheader:String!
+    section:Section!,
+    subsection:ID,
+    imagehead:String!
     description:String!
-    contents:[Content]!
+    contents:[Content!]
     creator:User!,
     tags:[String],
-    section:String
+    subsneed:Boolean
 }
 
 type PaginationRes{

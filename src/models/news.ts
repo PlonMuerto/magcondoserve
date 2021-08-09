@@ -7,6 +7,19 @@ const NewsSchema = new Schema({
         type:String,
         required:true
     },
+    section:{
+        type:Schema.Types.ObjectId,
+        ref:"sections",
+        required:true
+    },
+    subsection:{
+        type:Schema.Types.ObjectId,
+        required:true
+    },
+    tags:[{
+        type:String,
+        required:true
+    }],
     contents:[{
         type:Schema.Types.ObjectId,
         ref:'contents'
@@ -22,10 +35,16 @@ const NewsSchema = new Schema({
     description:{
         type:String,
         required:true
+    },
+    subsneed:{
+        type:Boolean,
+        default:false
     }
+    
 },{
     timestamps:true
 });
 
 export const NoticeModel = model<INewDocument>("News", NewsSchema);
+
 

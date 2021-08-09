@@ -19,8 +19,10 @@ export const Rnotices:IResolvers = {
 
             ///params filters
             let title:paramsFilter = args.title  ? args.title : false;
-            let tags:arrayFilter = args.tags  ? args.tags : false;
+            let tags:arrayFilter = args.tags.length  ? args.tags : false;
             let section: paramsFilter = args.section  ? args.section : false;
+            let subsection: paramsFilter = args.subsection  ? args.subsection : false;
+
 
             let page = (args.page  || 1)-1;
             
@@ -41,6 +43,10 @@ export const Rnotices:IResolvers = {
 
             if(section){
                 favoritesNotices.where('section').all([section]);
+            }
+
+            if(subsection){
+                favoritesNotices.where('subsection').all([subsection]);
             }
 
             let lengthComp = await favoritesNotices;

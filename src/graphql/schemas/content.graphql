@@ -3,14 +3,29 @@ type Query {
 }
 
 type Content {
-    type:ContentType
+    type:ContentType!
+    description:String
+    file:String
+    pretext:String
+    link:String
+    text:String
+    list:[String!]
+    paragraph:String
+    subtitle:String
+    by:String
+    ID:ID
     content:String
     creator:User
-    new:Notice
+    notice:Notice
 }
 
 enum ContentType{
-    image
-    video
-    text
+    texto
+    parrafo
+    link
+    file
+    lista
+    lista ordenada
+    referencia
+    citar
 }

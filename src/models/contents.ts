@@ -2,17 +2,47 @@ import { Schema, model } from 'mongoose'
 
 import { IContentDocument } from '../interface/contents/content.data';
 
-const ContentType = ['image','video','text'];
+const ContentType = ['texto','parrafo','link','file','lista','lista ordenada','referencia','citar'];
 
 const ContentSchema = new Schema({
-    content:{
-        type:String,
-        required:true,
-    },
     type:{
         type:String,
         enum:ContentType,
         required:true
+    },
+    description:{
+        type:String
+    },
+    file:{
+        type:String,
+    },
+    pretext:{
+        type:String
+    },
+    link:{
+        type:String
+    },
+    text:{
+        type:String
+    },
+    list:[{
+        type:String
+    }],
+    content:{
+        type:String
+    },
+    paragraph:{
+        type:String
+    },
+    subtitle:{
+        type:String
+    },
+    by:{
+        type:String
+    },
+    ID:{
+        type:Schema.Types.ObjectId,
+        ref:'contents'
     },
     creator:{
         type:Schema.Types.ObjectId,

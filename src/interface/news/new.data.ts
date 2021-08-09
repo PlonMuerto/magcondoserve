@@ -1,11 +1,17 @@
 import { ObjectId, Model  } from "mongoose";
 
 export interface INew {
+    _id:ObjectId;
     title:string;
+    section:ObjectId;
+    subsection:ObjectId;
+    tags:Array<string>;
+    description:string;
     imagehead:string;
     contents:Array<ObjectId>;
     creator:ObjectId;
-    description:string;
+    subsneed:boolean;
+    create:Date;   
 }
 
 export interface INewDocument extends INew, Document {}

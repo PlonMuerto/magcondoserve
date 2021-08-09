@@ -1,4 +1,5 @@
 export interface NoticesParams {
+    subsection:string;
     section:string;
     tags:Array<string>;
     page:number;
