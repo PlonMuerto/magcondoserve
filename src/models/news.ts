@@ -9,7 +9,7 @@ const NewsSchema = new Schema({
     },
     section:{
         type:Schema.Types.ObjectId,
-        ref:"sections",
+        ref:"Section",
         required:true
     },
     subsection:{
@@ -22,7 +22,7 @@ const NewsSchema = new Schema({
     }],
     contents:[{
         type:Schema.Types.ObjectId,
-        ref:'contents'
+        ref:'Content'
     }],
     imagehead:{
         type:String,
@@ -30,7 +30,7 @@ const NewsSchema = new Schema({
     },
     creator:{
         type:Schema.Types.ObjectId,
-        ref:'users'
+        ref:'User'
     },
     description:{
         type:String,
@@ -45,6 +45,6 @@ const NewsSchema = new Schema({
     timestamps:true
 });
 
-export const NoticeModel = model<INewDocument>("News", NewsSchema);
+export const NoticeModel = model<INewDocument>("New", NewsSchema);
 
 

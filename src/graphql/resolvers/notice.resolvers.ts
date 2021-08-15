@@ -16,50 +16,66 @@ export const Rnotices:IResolvers = {
             return "mundo"
         },
         async getNotices(root:void,args:NoticesParams,context:any){
-
+            
             ///params filters
-            let title:paramsFilter = args.title  ? args.title : false;
-            let tags:arrayFilter = args.tags.length  ? args.tags : false;
-            let section: paramsFilter = args.section  ? args.section : false;
-            let subsection: paramsFilter = args.subsection  ? args.subsection : false;
+            try{
+                
+                
+                let title:paramsFilter = args.title  ? args.title : false;
+                let tags:arrayFilter = (args.tags && args.tags.length)  ? args.tags : false;
+                let section: paramsFilter = args.section  ? args.section : false;
+                let subsection: paramsFilter = args.subsection  ? args.subsection : false;
+                
 
+                let page = (args.page  || 1)-1;
+                
+                let perPages = args.pages || 12;
 
-            let page = (args.page  || 1)-1;
+                let calcPage = (page*perPages);
+
             
-            let perPages = args.pages || 12;
+                let QueryNotices = Notices.find({}, null, {sort: {"createdAt": -1}});
+                
+                let lengthNotices = Notices.countDocuments();    
+                
 
-            let calcPage = (page*perPages);
+                //filter created for mongoose
+                if(title){
+                    QueryNotices.where('name').regex('.*' + title + '.*');
+                    lengthNotices.where('name').regex('.*' + title + '.*');
+                }
+        
+                if(tags){
+                    QueryNotices.where('tags').all(tags);
+                    lengthNotices.where('tags').all(tags);
+                }
 
-            let favoritesNotices = Notices.find();
+                if(section){
+                    QueryNotices.where('section').all([section]);
+                    lengthNotices.where('section').all([section]);
+                }
 
-            //filter created for mongoose
-            if(title){
-                favoritesNotices.where('name').regex('.*' + title + '.*');
-            }
-    
-            if(tags){
-                favoritesNotices.where('tags').all(tags);
-            }
+                if(subsection){
+                    QueryNotices.where('subsection').all([subsection]);
+                    lengthNotices.where('subsection').all([subsection]);
+                }
 
-            if(section){
-                favoritesNotices.where('section').all([section]);
-            }
 
-            if(subsection){
-                favoritesNotices.where('subsection').all([subsection]);
-            }
+                let length = await lengthNotices;                
 
-            let lengthComp = await favoritesNotices;
-            
+                let notices = QueryNotices.skip(calcPage).limit(perPages).populate("section").populate("creator");//.populate("");
 
-            let notices = favoritesNotices.skip(calcPage).limit(perPages);
+                let pages = length ? Math.ceil(length/perPages) : 0;
 
-            let pages = Math.ceil(lengthComp.length/perPages);
+                console.log(args);
 
-            return {
-                page,
-                pages,
-                notices
+                return {
+                    page,
+                    pages,
+                    notices
+                }
+            }catch(err){
+                console.log(err);
             }
         }   
     }
