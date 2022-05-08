@@ -29,8 +29,8 @@ router.put('/blockuser',adminControlls.lockedUser);
 //sections - crear section
 router.post('/createsection',adminControlls.createSection);
 
-//sections - borrar section
-router.delete('/deletesection',adminControlls.deleteSection);
+//sections - archivar section
+router.put('/filedsection',adminControlls.filedSection);
 
 //sections - crear subsection
 router.put('/addsubsection',adminControlls.addSubSection);
@@ -40,10 +40,5 @@ router.delete('/deletesubsection',adminControlls.pullSubsection);
 
 //sections - update
 router.put('/updatesection',adminControlls.updateSection);
-
-//borrar noticia
-router.delete('/deletenotice');
-router.post('/createsection');
-router.delete('/deletesection');
 
 export default router

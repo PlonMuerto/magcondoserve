@@ -13,12 +13,17 @@ const expiresIn  = 24*60*60;
 export default {
     login:async function (req:Request,res:Response){
         let dataAuth = req.body;
+        console.log(dataAuth)
         let send;
-        console.log(req.body)
+
         try{
             let user = await User.findOne({ email:dataAuth.email });
-            if(user) { 
+            console.log(user)
+            if(user && user.role === "admin") {
                 let compare = await bcrypt.compare(dataAuth.password,user.password);
+                
+                
+                console.log(dataAuth.password); 
                 if(compare){
                     send = await jwt.sign({
                         id:user._id,
@@ -30,14 +35,16 @@ export default {
                     return res.status(200).send({token:send});
                 }
                 else{
+                    console.log(434534)
                     console.log(403);
                     return res.status(403).send('no tienes acceso');
                 }
             }else{
+                console.log(3333)
                 console.log(403);
                 return res.status(403).send('no tienes Acceso');
             }
-        }catch(err){ 
+        }catch(err:any){ 
             console.log(err);
                 
             //errores del nombre
@@ -55,7 +62,7 @@ export default {
             console.log(req.body.data);
             console.log('demonios wump');
             let {names,country,email,phone,password} = req.body.data;
-            
+                
     
                 let newUser =  {
                     names,
@@ -75,7 +82,7 @@ export default {
                         },SECRET,{expiresIn});
                         return res.status(200).send({token:token});
                         
-            }catch(err){
+            }catch(err:any){
                 console.log(err);
                 if(err.errors){
                     let errors:any;

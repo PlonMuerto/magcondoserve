@@ -10,5 +10,6 @@ import noticesControl from '../controllers/notices.controllers';
 
 router.get('/getnotice/:id?',noticesControl.getNotice);
 
+
 export default router;
 

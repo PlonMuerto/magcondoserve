@@ -217,7 +217,7 @@ export const Rusers:IResolvers = {
             }
         },
         async getUserslength(parent,args,context){
-            console.log('xdaniel');
+
             if(!context.authorization){
                 console.log('xd1')
                 return  Error('no estas autorizado');
@@ -363,7 +363,7 @@ export const Rusers:IResolvers = {
                 
                 return token;
                             
-            }catch(err){
+            }catch(err:any){
                 console.log(err);
                 console.log('error #001');
                 /*return err.message;*/
@@ -413,7 +413,7 @@ export const Rusers:IResolvers = {
                 }else{
                     return 'no tienes acceso';
                 }
-            }catch(err){  
+            }catch(err:any){  
                 console.log(err);
                 console.log('error #002');
                 

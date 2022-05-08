@@ -41,7 +41,7 @@ export default {
                 console.log(403);
                 return res.status(403).send('no tienes Acceso');
             }
-        }catch(err){ 
+        }catch(err:any){ 
             console.log(err);
                 
             //errores del nombre
@@ -73,14 +73,23 @@ export default {
         }
         
     },
-    deleteSection:async function(req:Request,res:Response){
+    filedSection:async function(req:Request,res:Response){
+
         try{
             const { id } = req.body;
-            let deleted = await Sections.findOneAndRemove({_id:id});
-            return res.status(200).send(deleted);
+
+            let archived = await Sections.findById(id);
+
+            let change = await Sections.updateOne({_id:id},{$set:{filed:!archived?.filed}});
+            
+            if(archived?.filed){
+                return res.status(200).send("seccion online");
+            }else{
+                return res.status(200).send("seccion archivada");
+            }
         }catch(err){
             console.log(err);
-            return res.status(500).send(err);
+            return res.status(500).send("error al archivar seccion");
         }
     },
     addSubSection:async function(req:Request,res:Response){

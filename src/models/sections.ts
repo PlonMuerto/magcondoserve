@@ -30,7 +30,11 @@ const SectionSchema = new Schema({
             type:String,
             required:true
         }
-    }]
+    }],
+    filed:{
+        type:Boolean,
+        default:false
+    }
 },{
     timestamps:true
 });

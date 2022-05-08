@@ -12,6 +12,7 @@ export interface INew {
     creator:ObjectId;
     subsneed:boolean;
     create:Date;   
+    archived:boolean;
 }
 
 export interface INewDocument extends INew, Document {}

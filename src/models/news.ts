@@ -39,6 +39,10 @@ const NewsSchema = new Schema({
     subsneed:{
         type:Boolean,
         default:false
+    },
+    archived:{
+        type:Boolean,
+        default:false
     }
     
 },{

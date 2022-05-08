@@ -1,6 +1,8 @@
-import mongoose from 'mongoose'
+import {connect} from 'mongoose'
 
-mongoose.connect("mongodb://localhost:27017/magcondo", {
+const MongoAtlas = String(process.env.MONGODB_URI) 
+
+connect(MongoAtlas , {
   useNewUrlParser: true,
   useFindAndModify: false,
   useUnifiedTopology: true,

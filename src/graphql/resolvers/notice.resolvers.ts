@@ -8,26 +8,25 @@ import { NoticesParams } from '../../interface/news/new.params'
 
 //types 
 type paramsFilter = string | boolean;
-type arrayFilter = Array<string> | boolean;
 
 export const Rnotices:IResolvers = {
     Query:{
         hellon() {
+            console.log("daniel se pudo");
             return "mundo"
         },
         async getNotices(root:void,args:NoticesParams,context:any){
-            
             ///params filters
             try{
-                
-                
+
+                console.log(args);
                 let title:paramsFilter = args.title  ? args.title : false;
-                let tags:arrayFilter = (args.tags && args.tags.length)  ? args.tags : false;
+                let tag:paramsFilter = args.tag ? args.tag : false;
                 let section: paramsFilter = args.section  ? args.section : false;
                 let subsection: paramsFilter = args.subsection  ? args.subsection : false;
                 
 
-                let page = (args.page  || 1)-1;
+                let page = args.page;
                 
                 let perPages = args.pages || 12;
 
@@ -41,13 +40,14 @@ export const Rnotices:IResolvers = {
 
                 //filter created for mongoose
                 if(title){
-                    QueryNotices.where('name').regex('.*' + title + '.*');
-                    lengthNotices.where('name').regex('.*' + title + '.*');
+                    QueryNotices.where('title').regex('.*' + title + '.*');
+                    lengthNotices.where('title').regex('.*' + title + '.*');
                 }
         
-                if(tags){
-                    QueryNotices.where('tags').all(tags);
-                    lengthNotices.where('tags').all(tags);
+                if(tag){
+                    
+                    QueryNotices.where('tags').all([tag]);
+                    lengthNotices.where('tags').all([tag]);
                 }
 
                 if(section){
@@ -67,7 +67,7 @@ export const Rnotices:IResolvers = {
 
                 let pages = length ? Math.ceil(length/perPages) : 0;
 
-                console.log(args);
+                
 
                 return {
                     page,

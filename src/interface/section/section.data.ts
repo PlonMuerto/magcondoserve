@@ -10,7 +10,8 @@ export interface ISection {
     color:string;
     secundary:string;
     description:string;
-    subsections:Array<ISubSection>
+    subsections:Array<ISubSection>;
+    filed:boolean;
 }
 export interface ISectionDocument extends ISection, Document {}
 export interface ISectionModel extends Model<ISectionDocument> {}

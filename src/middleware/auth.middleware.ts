@@ -17,7 +17,7 @@ export default async function auth_user(req:Request,res:Response,next:NextFuncti
             res.locals.user=valid;
             next();
         }
-    }catch(err){
+    }catch(err:any){
         console.log(err);
         //malformed jwt
         if(err.message === 'jwt malformed') return res.status(503).send('your session is corrupted, enter again');

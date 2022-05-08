@@ -1,5 +1,5 @@
 type Query{
-    getSections(name:String):[Section]!
+    getSections(name:String,filed:Boolean):[Section]!
 }
 
 type Section{
@@ -9,7 +9,9 @@ type Section{
     color:String!
     secundary:String!
     subsection:[Subsection]
+    filed:Boolean
 }
+
 type Subsection{
     _id:ID!
     title:String!

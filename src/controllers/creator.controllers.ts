@@ -4,7 +4,7 @@ import { Response,Request } from "express"
     //interfaz
 import {INew} from '../interface/news/new.data';
     //model
-import { NoticeModel } from "../models/news";
+import { NoticeModel  } from "../models/news";
 
 //contents
     //interfaz
@@ -18,8 +18,28 @@ export default {
     loginCreator:async function (){
         console.log("santiago");
     },
-    createNotice:async function (req:Request,res:Response){
+    filedNew:async function(req:Request,res:Response){
+        const id = req.body.id;
+        try{
+            let archived = await NoticeModel.findById(id);
 
+            let change= await NoticeModel.updateOne({_id:id},{$set:{archived:!archived?.archived}});
+
+            console.log();
+
+            if(archived?.archived){
+                return res.status(200).send("noticia online");
+            }else{
+                return res.status(200).send("noticia archivada");
+            }
+
+        }catch(err){
+            console.log(err);
+            return res.status(500).send({message:"error en sistema de archivado"});
+        }
+    },
+    createNotice:async function (req:Request,res:Response){
+        console.log("creando papi");
         try{
             //alistamos los archivos para ser leidos
             const archivos = req.files as { [fieldname: string]: Express.Multer.File[] };
@@ -78,15 +98,20 @@ export default {
 
             //recorremos en un for el contenido tratado y creaos los contents y guardamos la id
             for(let content of contenidosListos){
-                let contenido = new ContentModel({
-                    ...content,
-                    notice:NewNotice._id,
-                    creator:res.locals.user.id
-                }).save();
+                if(content.type === "referencia"){
+                    console.log(content);
+                    contenidosIDS = [...contenidosIDS,content.ID];
+                }else{ 
+                    let contenido = new ContentModel({
+                        ...content,
+                        notice:NewNotice._id,
+                        creator:res.locals.user.id
+                    }).save();
 
-                const promesa = await contenido; 
+                    const promesa = await contenido; 
 
-                contenidosIDS = [...contenidosIDS,promesa._id];
+                    contenidosIDS = [...contenidosIDS,promesa._id];
+                }
             }
             
             //guardamos array de ids
@@ -100,14 +125,5 @@ export default {
             console.log(err);
             return res.status(500).send({message:'error creando la noticia'});
         }
-    },
-    editNotice:async function (req:Request,res:Response){
-
-    },
-    deleteNotice:async function (req:Request,res:Response){
-        
-    },
-    createContent:async function(req:Request,res:Response){
-        
     }
 }
