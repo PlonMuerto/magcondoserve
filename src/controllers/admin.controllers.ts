@@ -128,6 +128,7 @@ export default {
         }
     },
     updateSection:async function(req:Request,res:Response){
+        console.log("req.body")
         try{
             
             let update = await Sections.findByIdAndUpdate(req.body.id,{$set:{
