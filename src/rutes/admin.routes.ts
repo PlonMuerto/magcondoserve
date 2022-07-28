@@ -11,8 +11,6 @@ import adminControlls from '../controllers/admin.controllers';
 
 //middleware
 
-//login admin
-router.post('/loginadmin',adminControlls.loginAdmin);
 
 //users - borrar usuario
 router.delete('/deleteuser',adminControlls.deleteUser);

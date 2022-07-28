@@ -7,16 +7,7 @@ export default{
     async getNotice(req:Request,res:Response){
         const id = req.params.id;
         
-        let notice = await Notices.findById(id,{
-            "title":1,
-            "description":1,
-            "imagehead":1,
-            "subsection":1,
-            "subsneed":1,
-            "tags":1,
-            "_id":1,
-            "createdAt":1
-        }).populate("contents").populate("creator","name").populate("section");
+        let notice = await Notices.findById(id).populate("contents").populate("creator","name").populate("section");
         console.log(notice);
         
         if(notice){

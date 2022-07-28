@@ -30,7 +30,7 @@ const upload = multer({
 const deleteImage = function(filename:string,callback:Function){
   let params = {
     Bucket:BUCKET_NAME,
-    key:filename
+    Key:filename
   }
   s3.deleteObject(params,function(err:Error,data:any){
     if(err){

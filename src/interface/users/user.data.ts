@@ -12,6 +12,7 @@ export interface IUser {
     locked:boolean;
     emailConfirm:boolean;
     phoneConfirm:boolean;
+    resetToken:string;
 }
 export interface IUserDocument extends IUser, Document {}
 export interface IUserModel extends Model<IUserDocument> {}

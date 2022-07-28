@@ -8,11 +8,28 @@ import creatorControl from '../controllers/creator.controllers';
 
 //middlewares
 
-router.post('/logincreator',creatorControl.loginCreator);
 router.post('/createnotice',upload.fields([{name:"head",maxCount:1},{name:"files",maxCount:8}]),creatorControl.createNotice);
 
 router.put("/filed",creatorControl.filedNew);
 
+router.put("/changetitle",creatorControl.changeTitle);
+
+router.put("/changesubsection",creatorControl.changeSubsection)
+
+router.put("/changesection",creatorControl.changeSection)
+
+router.put("/changedescription",creatorControl.changeDescription);
+
+router.put("/changetags",creatorControl.changeTags);
+
+
+router.put("/changeimagehead",upload.fields([{name:"head",maxCount:1}]),creatorControl.changeImagehead)
+
+router.put("/changedescimage",creatorControl.changeDescImage)
+
+router.put("/togglesubsneed",creatorControl.toggleSubsneed)
+
+router.put("/changelanguage",creatorControl.changeLocale)
 
 export default router;
 

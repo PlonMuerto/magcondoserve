@@ -2,6 +2,9 @@ import { Schema, model } from 'mongoose'
 
 import { INewDocument } from '../interface/news/new.data';
 
+
+const localeZones = ['en','es'];
+
 const NewsSchema = new Schema({
     title:{
         type:String,
@@ -28,6 +31,11 @@ const NewsSchema = new Schema({
         type:String,
         required:true
     },
+    headDescription:{
+        type:String,
+        required:true,
+        default:""
+    },
     creator:{
         type:Schema.Types.ObjectId,
         ref:'User'
@@ -43,6 +51,12 @@ const NewsSchema = new Schema({
     archived:{
         type:Boolean,
         default:false
+    },
+    locale:{
+        type:String,
+        enum:localeZones,
+        required:true,
+        default:"en"
     }
     
 },{

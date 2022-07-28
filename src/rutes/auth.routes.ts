@@ -8,7 +8,8 @@ const router = Router();
 //controller
 import authControllers from '../controllers/auth.controllers';
 
+
+//unique authentication for admins and editors
 router.post('/login',authControllers.login);
-router.post('/register',authControllers.register);
 
 export default router

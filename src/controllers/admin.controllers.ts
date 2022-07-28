@@ -15,43 +15,6 @@ const SECRET = process.env.KEY as string,
 const expiresIn  = 1*60*60;
 
 export default {
-    loginAdmin:async function (req:Request,res:Response){
-        let dataAuth = req.body;
-        let send;
-        console.log(req.body)
-        try{
-            let user = await Users.findOne({ email:dataAuth.email });
-            if(user && user.role === "admin") { 
-                let compare = await bcrypt.compare(dataAuth.password,user.password);
-                if(compare){
-                    send = await jwt.sign({
-                        id:user._id,
-                        role:user.role
-                    },SECRET,{expiresIn});
-
-                    console.log(send);
-                    
-                    return res.status(200).send({token:send});
-                }
-                else{
-                    console.log(403);
-                    return res.status(403).send('no tienes acceso');
-                }
-            }else{
-                console.log(403);
-                return res.status(403).send('no tienes Acceso');
-            }
-        }catch(err:any){ 
-            console.log(err);
-                
-            //errores del nombre
-            if (err && err.message) return res.status(400).send("credenciales equivocadas");
-
-            //errores no reconocidos
-            if (err) return res.status(500).send('server problems in ingress');
-        };
-    
-    },
     createSection:async function (req:Request,res:Response){
         try{
             const {name,color,secundary,description} = req.body;
@@ -63,8 +26,6 @@ export default {
             };
 
             let newSection = await new Sections(sectionmodel).save();
-
-            console.log(newSection);
 
             return res.status(200).send(newSection);
         }catch(err){
@@ -96,15 +57,11 @@ export default {
         try{
             const {title,id} = req.body;
 
-            console.log(req.body);
-
             const sectionmodel = {
                 title
             };
 
             let update = await  Sections.findByIdAndUpdate(id,{$push:{subsection:sectionmodel}});
-
-            console.log(update);
 
             return res.status(200).send(update);
         }catch(err){
@@ -115,9 +72,6 @@ export default {
     pullSubsection:async function (req:Request,res:Response){
         try{   
             const {id,idSub} = req.body;
-            console.log("daniel")
-
-            console.log(req.body);
 
             let updateSection = await Sections.findByIdAndUpdate(id,{$pull:{subsection:{_id:idSub}}});
             
@@ -128,7 +82,7 @@ export default {
         }
     },
     updateSection:async function(req:Request,res:Response){
-        console.log("req.body")
+        
         try{
             
             let update = await Sections.findByIdAndUpdate(req.body.id,{$set:{
@@ -138,14 +92,12 @@ export default {
                 secundary:req.body.secundary
             }});
 
-            console.log(update);
             res.status(200).send('ok');
         }catch(err){
-
+            return res.status(500).send(err);
         }
     },
     deleteUser:async function (req:Request,res:Response){
-        console.log("delete user");
         try{
             let { id } = req.body;
             let usuarioComp = await Users.findById(id);
@@ -166,13 +118,14 @@ export default {
             const { id } = req.body;
             let usuarioComp = await Users.findById(id);
             if(usuarioComp){
-                let role; 
+                let role;
                 if(usuarioComp.role === "user"){
                     role = "creator";
                 }
-                if(usuarioComp.role === "creator"){
+                if(usuarioComp.role === "creator" || usuarioComp.role === "admin"){
                     role = "user";
                 }
+                console.log(role)
                 let userUpdate = await Users.findByIdAndUpdate(id,{
                     $set:{
                         role

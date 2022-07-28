@@ -56,6 +56,10 @@ const UserSchema = new Schema({
     subscribed:{
         type:Boolean,
         default:false
+    },
+    resetToken:{
+        type:String,
+        default:"none"
     }
 },{
     timestamps:true

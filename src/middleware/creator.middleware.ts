@@ -12,7 +12,8 @@ export default async function auth_creator(req:Request,res:Response,next:NextFun
                 next();
             }
             else{
-                res.status(403).send('no estas autorizado');
+                
+                res.status(403).json({message:'no estas autorizado'});
             }
         }catch(err){
             res.status(500).send('error del server');

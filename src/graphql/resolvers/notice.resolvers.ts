@@ -19,7 +19,6 @@ export const Rnotices:IResolvers = {
             ///params filters
             try{
 
-                console.log(args);
                 let title:paramsFilter = args.title  ? args.title : false;
                 let tag:paramsFilter = args.tag ? args.tag : false;
                 let section: paramsFilter = args.section  ? args.section : false;
