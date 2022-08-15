@@ -33,8 +33,7 @@ const NewsSchema = new Schema({
     },
     headDescription:{
         type:String,
-        required:true,
-        default:""
+        required:true
     },
     creator:{
         type:Schema.Types.ObjectId,

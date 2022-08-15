@@ -8,7 +8,6 @@ export default{
         const id = req.params.id;
         
         let notice = await Notices.findById(id).populate("contents").populate("creator","name").populate("section");
-        console.log(notice);
         
         if(notice){
             return res.status(200).send(notice);

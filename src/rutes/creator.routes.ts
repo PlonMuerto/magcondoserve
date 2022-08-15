@@ -31,5 +31,7 @@ router.put("/togglesubsneed",creatorControl.toggleSubsneed)
 
 router.put("/changelanguage",creatorControl.changeLocale)
 
+router.put("/changecontent",upload.fields([{name:"image",maxCount:1}]),creatorControl.changeContents)
+
 export default router;
 

@@ -527,5 +527,66 @@ export default {
             }
         }
         
+    },
+    changeContents:async function (req:Request,res:Response){
+        if(res.locals.user.role === "admin"){
+
+            try{ 
+                console.log(req.body);
+                if(req.body.type==="text"){
+                    let content = await ContentModel.updateOne({_id:req.body.id},{$set:{text:req.body.text}})
+                }else if(req.body.type==="file"){
+                    //alistamos los archivos para ser leidos
+                    const archivos = req.files as { [fieldname: string]: Express.Multer.File[] };
+
+                    //separamos los archivos 
+                    const { image } = archivos; 
+                            
+                    //preparamos la imagen para ser usada
+                    let linkImagen = image[0] as any;
+
+                    deleteImage(req.body.link,(error:any)=>{
+                        if(error){
+                            console.log(error)
+                            return res.status(503).send("error en subida de imagen");
+                        }
+                    });
+                    
+                    let content = await ContentModel.updateOne({_id:req.body.id},{$set:{description:req.body.description,file:linkImagen.key}})
+                }else if(req.body.type==="citar"){
+                    let content = await ContentModel.updateOne({_id:req.body.id},{$set:{by:req.body.by,text:req.body.text,link:req.body.link}});
+                }else if(req.body.type==="link"){
+                    let content = await ContentModel.updateOne({_id:req.body.id},{$set:{pretext:req.body.pretext,text:req.body.text,link:req.body.link}});
+                }else if(req.body.type==="referencia"){
+                    let content = await ContentModel.updateOne({_id:req.body.id},{$set:{ID:req.body.ID}});
+                }else{
+                    return res.status(402).send("fallo cambiando el contenido")
+                }
+                return res.status(200).send("actualizado el contenido");
+            }catch(err){
+                console.log(err)
+                return res.status(500).send("error en cambios por medio de un administrador")
+            }
+            
+        }else{
+
+            if(res.locals.user.id===req.body.content.creator){
+                try{ 
+                    if(req.body.content.type==="text"){
+                        let content = await ContentModel.updateOne({_id:req.body.content.id},{$set:{text:req.body.content.text}})
+                    }
+                    
+                    return res.status(200).send("actualizado el contenido");
+                }catch(err){
+                    console.log(err)
+                    return res.status(500).send("error en cambios por medio de un administrador")
+                }
+            }else{
+                return res.status(401).send("no estas autorizado");
+            }
+        }
+    },
+    deleteContents:async function(req:Request,res:Response){
+        
     }
 }
