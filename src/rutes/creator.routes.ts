@@ -33,5 +33,7 @@ router.put("/changelanguage",creatorControl.changeLocale)
 
 router.put("/changecontent",upload.fields([{name:"image",maxCount:1}]),creatorControl.changeContents)
 
+router.put("/deletecontent",creatorControl.deleteContents)
+
 export default router;
 
