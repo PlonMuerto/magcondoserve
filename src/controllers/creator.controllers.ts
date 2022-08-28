@@ -7,10 +7,11 @@ import {INew} from '../interface/news/new.data';
 import { NoticeModel  } from "../models/news";
 
 //contents
-    //interfaz
+//interfaz
 import { IContent } from "../interface/contents/content.data";
-    //model
+//model
 import { ContentModel } from "../models/contents";
+import { IContentModel } from "../interface/contents/content.data";
 
 //helpers
 import {deleteImage} from '../helpers/digitaloceanSpaces/configMulter'
@@ -154,7 +155,7 @@ export default {
                 return res.status(500).send("error en cambios por medio de un administrador")
             }
             
-        }else{
+        }else if(res.locals.user.role==="creator"){
 
             
             const validCreator = await NoticeModel.findOne({
@@ -200,7 +201,7 @@ export default {
                 return res.status(500).send("error en cambios por medio de un administrador")
             }
             
-        }else{
+        }else if(res.locals.user.role==="creator"){
 
             
             const validCreator = await NoticeModel.findOne({
@@ -245,7 +246,7 @@ export default {
                 return res.status(500).send("error en cambios por medio de un administrador")
             }
             
-        }else{
+        }else if(res.locals.user.role==="creator"){
 
             
             const validCreator = await NoticeModel.findOne({
@@ -287,7 +288,7 @@ export default {
                 return res.status(500).send("error en cambios por medio de un administrador")
             }
             
-        }else{
+        }else if(res.locals.user.role==="creator"){
 
             
             const validCreator = await NoticeModel.findOne({
@@ -330,7 +331,7 @@ export default {
                 return res.status(500).send("error en cambios por medio de un administrador")
             }
             
-        }else{
+        }else if(res.locals.user.role==="creator"){
 
             
             const validCreator = await NoticeModel.findOne({
@@ -389,7 +390,7 @@ export default {
                 return res.status(500).send("error en cambios por medio de un administrador")
             }
             
-        }else{
+        }else if(res.locals.user.role==="creator"){
             const {link,id} = req.body;
             
             const validCreator = await NoticeModel.findOne({
@@ -444,7 +445,7 @@ export default {
                 return res.status(500).send("error en cambios por medio de un administrador")
             }
             
-        }else{
+        }else if(res.locals.user.role==="creator"){
 
             
             const validCreator = await NoticeModel.findOne({
@@ -475,7 +476,7 @@ export default {
                 return res.status(500).send("error en cambios por medio de un administrador")
             }
             
-        }else{
+        }else if(res.locals.user.role==="creator"){
 
             
             const validCreator = await NoticeModel.findOne({
@@ -507,7 +508,7 @@ export default {
                 return res.status(500).send("error en cambios por medio de un administrador")
             }
             
-        }else{
+        }else if(res.locals.user.role==="creator"){
 
             
             const validCreator = await NoticeModel.findOne({
@@ -531,8 +532,8 @@ export default {
     },
     changeContents:async function (req:Request,res:Response){
         if(res.locals.user.role === "admin"){
-
-            try{ 
+            try{
+                console.log("reds")
                 if(req.body.type==="text"){
                     let content = await ContentModel.updateOne({_id:req.body.id},{$set:{text:req.body.text}})
                 }else if(req.body.type==="file"){
@@ -540,6 +541,8 @@ export default {
                     const archivos = req.files as { [fieldname: string]: Express.Multer.File[] };
 
                     //separamos los archivos 
+
+                     
                     const { image } = archivos;
                     
                     if(!image){
@@ -567,13 +570,13 @@ export default {
                 }else{
                     return res.status(402).send("fallo cambiando el contenido")
                 }
-                return res.status(200).send("actualizado el contenido");
+                return res.status(401).send("error en el tipo de contenido");
             }catch(err){
                 console.log(err)
                 return res.status(500).send("error en cambios por medio de un administrador")
             }
             
-        }else{
+        }else if(res.locals.user.role==="creator"){
 
             if(res.locals.user.id===req.body.content.creator){
                 try{ 
@@ -623,10 +626,10 @@ export default {
     },
     deleteContents:async function(req:Request,res:Response){
         if(res.locals.user.role === "admin"){
-
             try{ 
+                console.log(req.body)
                 if(req.body.type==="file"){
-                    deleteImage(req.body.link,(error:any)=>{
+                   deleteImage(req.body.file,(error:any)=>{
                         if(error){
                             console.log(error)
                             return res.status(503).send("error en subida de imagen");
@@ -641,54 +644,155 @@ export default {
                     let deleteContent = await ContentModel.findByIdAndDelete(req.body._id);
                     return res.status(200).send("contenido eliminado con exito");
                 } 
-                
-                if(false){
-                    //alistamos los archivos para ser leidos
-                    const archivos = req.files as { [fieldname: string]: Express.Multer.File[] };
 
-                    //separamos los archivos 
-                    const { image } = archivos;
-                    
-                    if(!image){
-                        let content = await ContentModel.updateOne({_id:req.body.id},{$set:{description:req.body.description}})    
-                        return res.status(200).send("actualizado el contenido");
-                    }
-                            
-                    //preparamos la imagen para ser usada
-                    let linkImagen = image[0] as any;
-
-                    deleteImage(req.body.link,(error:any)=>{
-                        if(error){
-                            console.log(error)
-                            return res.status(503).send("error en subida de imagen");
-                        }
-                    });
-                    
-                    let content = await ContentModel.updateOne({_id:req.body.id},{$set:{description:req.body.description,file:linkImagen.key}})
-                }
-                return res.status(200).send("actualizado el contenido");
             }catch(err){
                 console.log(err)
                 return res.status(500).send("error en cambios por medio de un administrador")
             }
             
-        }else{
+        }else if(res.locals.user.role==="creator"){
 
             if(res.locals.user.id===req.body.content.creator){
                 try{ 
                     if(req.body.type==="file"){
-                        let content = await ContentModel.updateOne({_id:req.body.id},{$set:{text:req.body.text}})
-                    }else {
-
+                        deleteImage(req.body.file,(error:any)=>{
+                            if(error){
+                                console.log(error)
+                                return res.status(503).send("error en subida de imagen");
+                            }
+                        });
+                        
+                        let updateNotice = await NoticeModel.findByIdAndUpdate(req.body.notice,{$pull:{contents:{$eq:req.body._id}}});
+                        let deleteContent = await ContentModel.findByIdAndDelete(req.body._id);
+                        return res.status(200).send("contenido eliminado con exito");
+                    }else {    
+                        let updateNotice = await NoticeModel.findByIdAndUpdate(req.body.notice,{$pull:{contents:{$eq:req.body._id}}});
+                        let deleteContent = await ContentModel.findByIdAndDelete(req.body._id);
+                        return res.status(200).send("contenido eliminado con exito");
                     }
-                    return res.status(200).send("borrado contenido");
                 }catch(err){
                     console.log(err)
-                    return res.status(500).send("error en cambios por medio de un administrador")
+                    return res.status(500).send("error en cambios por medio de un editor")
                 }
             }else{
                 return res.status(401).send("no estas autorizado");
             }
+        }
+    },
+    addContent:async function(req:Request,res:Response){
+        console.log(req.body);
+        if(res.locals.user.role === "admin" || (res.locals.user.id === req.body.creator)){
+            if(req.body.type==="file"){
+                const {index,position} = req.body as any;
+                try{
+
+                
+                    //alistamos archivo para ser leidos
+                    const archivos = req.files as { [fieldname: string]: Express.Multer.File[] };
+
+                    console.log(archivos);
+            
+                    //separamos los archivos 
+                    const { image } = archivos;
+        
+                    //link imagen
+                    const imageobject =image[0] as any;
+        
+                    //create content
+                    const content = new ContentModel({
+                        type:req.body.type,
+                        file:imageobject.key,
+                        notice:req.body.notice,
+                        creator:res.locals.user.id,
+                        description:req.body.description
+                    });
+
+                    await content.save();
+
+                    //update notice
+                    let notice = await NoticeModel.findById(req.body.notice,{contents:1});
+
+                    let contents =notice?.contents as any;
+
+                    contents.splice(position ? index+1 : index,0,content._id)
+
+                    let update = await NoticeModel.findByIdAndUpdate(req.body.notice,{$set:{contents}});
+                    
+                    return res.status(200).send("agregado el nuevo contenido")
+            
+                }catch(err){
+                    console.log(err);
+                    return res.status(500).send("error en el servidor agregando contenido")
+                }
+            
+            }else {
+                const {index,position} = req.body as any;
+                
+                try{
+                    //create content
+                    let content = {} as any;
+
+                    switch(req.body.type){
+                        case "texto":
+                            content = new ContentModel({
+                                text:req.body.text,
+                                type:req.body.type,
+                                notice:req.body.notice,
+                                creator:res.locals.user.id,
+                            })
+                        case "citar":
+                            content = new ContentModel({
+                                by:req.body.by,
+                                text:req.body.text,
+                                type:req.body.type,
+                                link:req.body.link,
+                                notice:req.body.notice,
+                                creator:res.locals.user.id,
+                            });
+                        break;
+                        case "link":
+                            content =  new ContentModel({
+                                pretext:req.body.pretext,
+                                text:req.body.text,
+                                type:req.body.type,
+                                link:req.body.link,
+                                notice:req.body.notice,
+                                creator:res.locals.user.id,
+                            })
+                        break;
+                        case "referencia":
+                            content =  new ContentModel({
+                                ID:req.body.ID,
+                                type:req.body.type,
+                                notice:req.body.notice,
+                                creator:res.locals.user.id,
+                            });                        
+                        break;
+
+                        default:
+                            return res.status(305).send("tipo de contenido erroneo")
+                    } 
+                    
+                    await content.save();
+
+                    //update notice
+                    let notice = await NoticeModel.findById(req.body.notice,{contents:1});
+
+                    let contents =notice?.contents as any;
+
+                    contents.splice(position ? index+1 : index,0,content._id)
+
+                    let update = await NoticeModel.findByIdAndUpdate(req.body.notice,{$set:{contents}});
+                    
+                    return res.status(200).send("agregado el nuevo contenido")
+                }catch(err){
+                    console.log(err);
+                    return res.status(500).send("error en el servidor agregando contenido")
+                }
+            }
+
+        }else {
+            return res.status(401).send("no estas autorizado")
         }
     }
 }

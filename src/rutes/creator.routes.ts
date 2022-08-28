@@ -35,5 +35,7 @@ router.put("/changecontent",upload.fields([{name:"image",maxCount:1}]),creatorCo
 
 router.put("/deletecontent",creatorControl.deleteContents)
 
+router.put("/addcontent",upload.fields([{name:"image",maxCount:1}]),creatorControl.addContent);
+
 export default router;
 

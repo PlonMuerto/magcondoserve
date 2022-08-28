@@ -13,6 +13,7 @@ export interface INew {
     subsneed:boolean;
     create:Date;   
     archived:boolean;
+    locale:string;
 }
 
 export interface INewDocument extends INew, Document {}
