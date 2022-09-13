@@ -531,18 +531,16 @@ export default {
         
     },
     changeContents:async function (req:Request,res:Response){
-        if(res.locals.user.role === "admin"){
+        if(res.locals.user.role === "admin" || (res.locals.user.role==="creator" && res.locals.user.id===req.body.content?.creator)){
             try{
-                console.log("reds")
                 if(req.body.type==="text"){
                     let content = await ContentModel.updateOne({_id:req.body.id},{$set:{text:req.body.text}})
+                    return res.status(200).send("cambio hecho correctamente");
                 }else if(req.body.type==="file"){
                     //alistamos los archivos para ser leidos
                     const archivos = req.files as { [fieldname: string]: Express.Multer.File[] };
 
                     //separamos los archivos 
-
-                     
                     const { image } = archivos;
                     
                     if(!image){
@@ -561,71 +559,31 @@ export default {
                     });
                     
                     let content = await ContentModel.updateOne({_id:req.body.id},{$set:{description:req.body.description,file:linkImagen.key}})
+
+                    return res.status(200).send("cambio hecho correctamente");
                 }else if(req.body.type==="citar"){
                     let content = await ContentModel.updateOne({_id:req.body.id},{$set:{by:req.body.by,text:req.body.text,link:req.body.link}});
+                    return res.status(200).send("cambio hecho correctamente");
                 }else if(req.body.type==="link"){
                     let content = await ContentModel.updateOne({_id:req.body.id},{$set:{pretext:req.body.pretext,text:req.body.text,link:req.body.link}});
+                    return res.status(200).send("cambio hecho correctamente");
                 }else if(req.body.type==="referencia"){
                     let content = await ContentModel.updateOne({_id:req.body.id},{$set:{ID:req.body.ID}});
+                    return res.status(200).send("cambio hecho correctamente");
                 }else{
                     return res.status(402).send("fallo cambiando el contenido")
                 }
-                return res.status(401).send("error en el tipo de contenido");
             }catch(err){
                 console.log(err)
                 return res.status(500).send("error en cambios por medio de un administrador")
             }
             
-        }else if(res.locals.user.role==="creator"){
-
-            if(res.locals.user.id===req.body.content.creator){
-                try{ 
-                    if(req.body.type==="text"){
-                        let content = await ContentModel.updateOne({_id:req.body.id},{$set:{text:req.body.text}})
-                    }else if(req.body.type==="file"){
-                        //alistamos los archivos para ser leidos
-                        const archivos = req.files as { [fieldname: string]: Express.Multer.File[] };
-    
-                        //separamos los archivos 
-                        const { image } = archivos;
-                        
-                        if(!image){
-                            let content = await ContentModel.updateOne({_id:req.body.id},{$set:{description:req.body.description}})    
-                            return res.status(200).send("actualizado el contenido");
-                        }
-                                
-                        //preparamos la imagen para ser usada
-                        let linkImagen = image[0] as any;
-    
-                        deleteImage(req.body.link,(error:any)=>{
-                            if(error){
-                                console.log(error)
-                                return res.status(503).send("error en subida de imagen");
-                            }
-                        });
-                        
-                        let content = await ContentModel.updateOne({_id:req.body.id},{$set:{description:req.body.description,file:linkImagen.key}})
-                    }else if(req.body.type==="citar"){
-                        let content = await ContentModel.updateOne({_id:req.body.id},{$set:{by:req.body.by,text:req.body.text,link:req.body.link}});
-                    }else if(req.body.type==="link"){
-                        let content = await ContentModel.updateOne({_id:req.body.id},{$set:{pretext:req.body.pretext,text:req.body.text,link:req.body.link}});
-                    }else if(req.body.type==="referencia"){
-                        let content = await ContentModel.updateOne({_id:req.body.id},{$set:{ID:req.body.ID}});
-                    }else{
-                        return res.status(402).send("fallo cambiando el contenido")
-                    }
-                    return res.status(200).send("actualizado el contenido");
-                }catch(err){
-                    console.log(err)
-                    return res.status(500).send("error en cambios por medio de un administrador")
-                }
-            }else{
-                return res.status(401).send("no estas autorizado");
-            }
+        }else{
+            return res.status(500).send("error en el server: error en cambio de contenido. informar a mantenimiento")
         }
     },
     deleteContents:async function(req:Request,res:Response){
-        if(res.locals.user.role === "admin"){
+        if(res.locals.user.role === "admin" || (res.locals.user.role==="creator" && res.locals.user.id===req.body.content.creator)){
             try{ 
                 console.log(req.body)
                 if(req.body.type==="file"){
@@ -650,47 +608,20 @@ export default {
                 return res.status(500).send("error en cambios por medio de un administrador")
             }
             
-        }else if(res.locals.user.role==="creator"){
-
-            if(res.locals.user.id===req.body.content.creator){
-                try{ 
-                    if(req.body.type==="file"){
-                        deleteImage(req.body.file,(error:any)=>{
-                            if(error){
-                                console.log(error)
-                                return res.status(503).send("error en subida de imagen");
-                            }
-                        });
-                        
-                        let updateNotice = await NoticeModel.findByIdAndUpdate(req.body.notice,{$pull:{contents:{$eq:req.body._id}}});
-                        let deleteContent = await ContentModel.findByIdAndDelete(req.body._id);
-                        return res.status(200).send("contenido eliminado con exito");
-                    }else {    
-                        let updateNotice = await NoticeModel.findByIdAndUpdate(req.body.notice,{$pull:{contents:{$eq:req.body._id}}});
-                        let deleteContent = await ContentModel.findByIdAndDelete(req.body._id);
-                        return res.status(200).send("contenido eliminado con exito");
-                    }
-                }catch(err){
-                    console.log(err)
-                    return res.status(500).send("error en cambios por medio de un editor")
-                }
-            }else{
-                return res.status(401).send("no estas autorizado");
-            }
+        }else {
+            return res.status(401).send("no estas autorizado")
         }
+        
     },
     addContent:async function(req:Request,res:Response){
-        console.log(req.body);
-        if(res.locals.user.role === "admin" || (res.locals.user.id === req.body.creator)){
+        if(res.locals.user.role === "admin" || (res.locals.user.role==="creator" && res.locals.user.id===req.body.content?.creator)){
             if(req.body.type==="file"){
+
+                console.log(req.body)
                 const {index,position} = req.body as any;
                 try{
-
-                
                     //alistamos archivo para ser leidos
                     const archivos = req.files as { [fieldname: string]: Express.Multer.File[] };
-
-                    console.log(archivos);
             
                     //separamos los archivos 
                     const { image } = archivos;
@@ -713,8 +644,8 @@ export default {
                     let notice = await NoticeModel.findById(req.body.notice,{contents:1});
 
                     let contents =notice?.contents as any;
-
-                    contents.splice(position ? index+1 : index,0,content._id)
+                     
+                    contents.splice(index+Number(position),0,content._id)
 
                     let update = await NoticeModel.findByIdAndUpdate(req.body.notice,{$set:{contents}});
                     
@@ -726,6 +657,7 @@ export default {
                 }
             
             }else {
+                console.log(req.body)
                 const {index,position} = req.body as any;
                 
                 try{
@@ -794,5 +726,16 @@ export default {
         }else {
             return res.status(401).send("no estas autorizado")
         }
-    }
+    },
+    /*
+    en desarrollo
+    deleteNotice:async function(req:Request,res:Response){
+        if(res.locals.user.role === "admin" || (res.locals.user.role==="creator" && res.locals.user.id===req.body.content.creator)){
+            const {id} = req.body;
+            const notice = NoticeModel.findById(id,{contents:1})
+        }else{
+            return res.status(401).send("no estas autorizado")
+        }
+
+    }*/
 }
